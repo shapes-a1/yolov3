@@ -56,7 +56,7 @@ def detect(save_img=False):
 
         # Process detections
         for i in range(len(labels)):
-            p, s, im0 = path, '', im0s
+            p, im0 = path, im0s
             save_path = str(Path(out) / Path(p).name)
 
             if bboxes[i] is not None and len(bboxes[i]):
@@ -69,7 +69,7 @@ def detect(save_img=False):
                     plot_one_box(bboxes[i], im0, label=label, color=colors[int(labels[i])])
 
             # Print time (inference + NMS)
-            print('%sDone. (%.3fs)' % (s, time.time() - t))
+            print('Done. (%.3fs)' % (time.time() - t))
 
             # Save results (image with detections)
             if save_img:
