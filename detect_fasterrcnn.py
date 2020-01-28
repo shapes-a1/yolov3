@@ -31,10 +31,10 @@ def detect(save_img=False):
     if webcam:
         view_img = True
         torch.backends.cudnn.benchmark = True  # set True to speed up constant image size inference
-        dataset = LoadStreams(source, img_size=img_size, half=half)
+        dataset = LoadStreams(source, img_size=img_size, half=False)
     else:
         save_img = True
-        dataset = LoadImages(source, img_size=img_size, half=half)
+        dataset = LoadImages(source, img_size=img_size, half=False)
 
     # Get names and colors
     names = load_classes(opt.names)
