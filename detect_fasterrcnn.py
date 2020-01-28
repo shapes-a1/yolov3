@@ -59,14 +59,13 @@ def detect(save_img=False):
             p, im0 = path, im0s
             save_path = str(Path(out) / Path(p).name)
 
-            if bboxes[i] is not None and len(bboxes[i]):
-                # Rescale boxes from img_size to im0 size
-                bboxes[i] = scale_coords_fasterrcnn(img.shape[2:], bboxes[i], im0.shape).round()
+            # Rescale boxes from img_size to im0 size
+            bboxes[i] = scale_coords_fasterrcnn(img.shape[2:], bboxes[i], im0.shape).round()
 
-                # Write results
-                if save_img or view_img:  # Add bbox to image
-                    label = '%s %.2f' % (names[int(labels[i])], scores[i])
-                    plot_one_box(bboxes[i], im0, label=label, color=colors[int(labels[i])])
+            # Write results
+            if save_img or view_img:  # Add bbox to image
+                label = '%s %.2f' % (names[int(labels[i])], scores[i])
+                plot_one_box(bboxes[i], im0, label=label, color=colors[int(labels[i])])
 
             # Print time (inference + NMS)
             print('Done. (%.3fs)' % (time.time() - t))
