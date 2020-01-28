@@ -61,7 +61,7 @@ def detect(save_img=False):
 
             if bboxes[i] is not None and len(bboxes[i]):
                 # Rescale boxes from img_size to im0 size
-                bboxes[i] = scale_coords(img.shape[2:], bboxes[i], im0.shape).round()
+                bboxes[i] = scale_coords_fasterrcnn(img.shape[2:], bboxes[i], im0.shape).round()
 
                 # Write results
                 if save_img or view_img:  # Add bbox to image

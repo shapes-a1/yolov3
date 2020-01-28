@@ -161,12 +161,38 @@ def scale_coords(img1_shape, coords, img0_shape, ratio_pad=None):
     clip_coords(coords, img0_shape)
     return coords
 
+def scale_coords_fasterrcnn(img1_shape, coords, img0_shape, ratio_pad=None):
+    # Rescale coords (xyxy) from img1_shape to img0_shape
+    if ratio_pad is None:  # calculate from img0_shape
+        gain = max(img1_shape) / max(img0_shape)  # gain  = old / new
+        pad = (img1_shape[1] - img0_shape[1] * gain) / 2, (img1_shape[0] - img0_shape[0] * gain) / 2  # wh padding
+    else:
+        gain = ratio_pad[0][0]
+        pad = ratio_pad[1]
+
+    # coords[:, [0, 2]] -= pad[0]  # x padding
+    coords[0] -= pad[0]
+    coords[2] -= pad[0]
+    # coords[:, [1, 3]] -= pad[1]  # y padding
+    coords[1] -= pad[1]
+    coords[3] -= pad[1]
+    # coords[:, :4] /= gain
+    coords[:4] /= gain
+    clip_coords_fasterrcnn(coords, img0_shape)
+    return coords
+
 
 def clip_coords(boxes, img_shape):
-    # Clip bounding xyxy bounding boxes to image shape (height, width)
     boxes[:, [0, 2]] = boxes[:, [0, 2]].clamp(min=0, max=img_shape[1])  # clip x
     boxes[:, [1, 3]] = boxes[:, [1, 3]].clamp(min=0, max=img_shape[0])  # clip y
 
+
+def clip_coords_fasterrcnn(boxes, img_shape):
+    # Clip bounding xyxy bounding boxes to image shape (height, width)
+    boxes[0] = boxes[0].clamp(min=0, max=img_shape[1])
+    boxes[2] = boxes[2].clamp(min=0, max=img_shape[1])
+    boxes[1] = boxes[1].clamp(min=0, max=img_shape[0])
+    boxes[3] = boxes[3].clamp(min=0, max=img_shape[0])
 
 def ap_per_class(tp, conf, pred_cls, target_cls):
     """ Compute the average precision, given the recall and precision curves.
